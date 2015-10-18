@@ -1,0 +1,10 @@
+{
+  "applications": {
+    "SocialEase": {
+      "applicationId": "ZoRlR0MyiOwJcLH420YfdSZX4KkgM7m8BqhC7j2x"
+    },
+    "_default": {
+      "link": "SocialEase"
+    }
+  }
+}
