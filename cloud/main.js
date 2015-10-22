@@ -26,6 +26,51 @@ Parse.Cloud.define("hello", function(request, response) {
  */
 
 /**
+ * @param groupId          {Int}    (required) - group id for which recommendation needs to generated
+ */
+Parse.Cloud.define("user__get_user_groups", function(request, response) {
+    var groupId = request.params["groupid"];
+    console.log(groupId);
+    
+    var Group = Parse.Object.extend("Group");
+    var query = new Parse.Query(Group);
+    query.get(groupId, {
+        success: function(group) {
+            var usersString = group.get("users")
+            var usersPhoneNumbers = usersString.split(",")
+            
+            var User = Parse.Object.extend("User");
+            var query2 = new Parse.Query(User);
+            query2.containedIn("phone", usersPhoneNumbers);
+            query2.find({
+                success: function(results) {
+                    response.success(results)
+                    
+                    alert("Successfully retrieved " + results.length + " users.");
+                    // Do something with the returned Parse.Object values
+                    for (var i = 0; i < results.length; i++) {
+                        var object = results[i];
+                        console.log(object.id + ' - ' + object.get('phone'));
+                    }
+                },
+                error: function(error) {
+                    console.log("Error: " + error.code + " " + error.message);
+                    response.failure("Error retrieving users friends")
+                }
+            });
+            
+
+                                    
+            // response.success(usersPhoneNumbers)
+        },
+        error: function(object, error) {
+            response.failure("Error retrieving")
+        }
+    });
+});
+
+
+/**
  * Webhook for getting activity recommendations for a user group
  *
  * @param groupId          {Int}    (required) - group id for which recommendation needs to generated
