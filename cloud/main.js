@@ -76,7 +76,7 @@ Parse.Cloud.define("user__get_group_users", function(request, response) {
             
             var User = Parse.Object.extend("User");
             var query2 = new Parse.Query(User);
-            query2.containedIn("phone", usersPhoneNumbers);
+            query2.containedIn("objectId", usersPhoneNumbers);
             query2.find({
                 success: function(results) {
                     response.success(results)
