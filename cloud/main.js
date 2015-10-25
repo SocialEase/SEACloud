@@ -61,6 +61,41 @@ Parse.Cloud.define("user__get_user_groups", function(request, response) {
 });
 
 /**
+ * @param userId          {String}    (required) - user id to get friends for
+ */
+Parse.Cloud.define("user__get_user_friends", function(request, response) {
+	var userId = request.params["userid"];
+    
+	var User = Parse.Object.extend("User");
+	var queryUser = new Parse.Query(User);
+	queryUser.get(userId, {
+		success: function(user) {
+			var friendsString = user.get("friends");
+			var userIds = friendsString.split(",");
+						
+			var User = Parse.Object.extend("User");
+			var query2 = new Parse.Query(User);
+			query2.containedIn("objectId", userIds);
+			query2.find({
+				success: function(friends) {
+					                  
+					alert("Successfully retrieved " + friends.length + " friends.");
+					
+					response.success(friends)
+				},
+				error: function(error) {
+					console.log("Error: " + error.code + " " + error.message);
+					response.failure("Error retrieving user's friends")
+				}
+			});
+		},
+		error: function(object, error) {
+			response.failure("Error retrieving")
+		}
+	});
+});
+
+/**
  * @param groupId          {Int}    (required) - group id for which recommendation needs to generated
  */
 Parse.Cloud.define("user__get_group_users", function(request, response) {
