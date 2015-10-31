@@ -151,33 +151,63 @@ Parse.Cloud.define("user__get_group_users", function(request, response) {
  */
 Parse.Cloud.define("user_group__get_activity_recommendations", function(request, response) {
 
-
+    console.log(request);
     var resultJson = [];
-    resultJson.push({'id': 1,
-                     'name': 'Sakoon',
-                     'rating': 4.5,
-                     'location': 'Mountain View, CA',
-                     'posterImage': 'https://asocialease.parseapp.com/images/stub/Sakoon.png'});
-    resultJson.push({'id': 2,
-                     'name': 'Siva',
-                     'rating': 3.0,
-                     'location': 'Palo Alto, CA',
-                     'posterImage': 'https://asocialease.parseapp.com/images/stub/Siva.png'});
-    resultJson.push({'id': 3,
-                     'name': 'Amber Cafe',
-                     'rating': 4.0,
-                     'location': 'Mountain View, CA',
-                     'posterImage': 'https://asocialease.parseapp.com/images/stub/AmberCafe.png'});
-    resultJson.push({'id': 4,
-                     'name': 'Madras Cafe',
-                     'rating': 4.0,
-                     'location': 'Sunnyvale, CA',
-                     'posterImage': 'https://asocialease.parseapp.com/images/stub/MadrasCafe.png'});
-    resultJson.push({'id': 5,
-                     'name': 'Chaat Bhavan',
-                     'rating': 3.5,
-                     'location': 'Sunnyvale, CA',
-                     'posterImage': 'https://asocialease.parseapp.com/images/stub/ChaatBhavan.png'});
+    resultJson.push({"addressLine1": "357 Castro St",
+                     "city": "Mountain View",
+                     "description": "Indian",
+                     "image": {
+                         "__type": "File",
+                         "name": "tfss-ee547989-afeb-41a5-ac0f-71b1d7703b2f-Sakoon.png",
+                         "url": "http://files.parsetfss.com/36ba3fa4-0edd-4544-8a1f-a772ccd9446f/tfss-ee547989-afeb-41a5-ac0f-71b1d7703b2f-Sakoon.png"
+                     },
+                     "location": {
+                         "__type": "GeoPoint",
+                         "latitude": 37.3916756,
+                         "longitude": -122.0799188
+                     },
+                     "name": "Sakoon",
+                     "posterImageUrl": "https://asocialease.parseapp.com/images/stub/Sakoon.png",
+                     "rating": 3.5,
+                     "state": "CA",
+                     "zipcode": "94041"});
+    resultJson.push({"addressLine1": "600 W El Camino Real",
+                     "city": "Mountain View",
+                     "description": "Indian",
+                     "image": {
+                         "__type": "File",
+                         "name": "tfss-f63cd478-0036-4238-b5c5-43ad097db053-AmberCafe.png",
+                         "url": "http://files.parsetfss.com/36ba3fa4-0edd-4544-8a1f-a772ccd9446f/tfss-f63cd478-0036-4238-b5c5-43ad097db053-AmberCafe.png"
+                     },
+                     "location": {
+                         "__type": "GeoPoint",
+                         "latitude": 37.3851341,
+                         "longitude": -122.0820062
+                     },
+                     "name": "Amber Cafe",
+                     "posterImageUrl": "https://asocialease.parseapp.com/images/stub/AmberCafe.png",
+                     "rating": 4,
+                     "state": "CA",
+                     "zipcode": "94041"});
+    resultJson.push({"addressLine1": "129 Lytton Ave",
+                     "city": "Palo Alto",
+                     "description": "Indian, Pakistani",
+                     "image": {
+                         "__type": "File",
+                         "name": "tfss-a07cff17-e56f-465d-a0d0-ae85e60d3d60-Darbar.png",
+                         "url": "http://files.parsetfss.com/36ba3fa4-0edd-4544-8a1f-a772ccd9446f/tfss-a07cff17-e56f-465d-a0d0-ae85e60d3d60-Darbar.png"
+                     },
+                     "location": {
+                         "__type": "GeoPoint",
+                         "latitude": 37.4448476,
+                         "longitude": -122.1651561
+                     },
+                     "name": "Darbar",
+                     "posterImageUrl": "https://asocialease.parseapp.com/images/stub/Darbar.png",
+                     "rating": 4.5,
+                     "state": "CA",
+                     "zipcode": "94301"});
+
 
     response.success(resultJson);
 });
