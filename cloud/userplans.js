@@ -79,16 +79,43 @@ Parse.Cloud.define("plan__update_voting_status", function(request, response) {
                 var query = new Parse.Query(planObject);
                 query.get(planId, {
                   success: function(planObject) {
+                    var planName = planObject.get("name");
+                    var planDate = planObject.get("occurrenceDate");
+
+                    alert(planName);
+                    alert(planDate);
+
                     // The object was retrieved successfully.
                     planObject.set("votedActivityObjectId", maxVoteActivity);
+                    planObject.set("activityVotingObject", activityVotingDict);
                     planObject.save(null, {
                       success: function(planObject) {
-                        response.success({"votingComplete": votingComplete,
-                                  "votedUserList": votedUserList,
-                                  "planUserList": planUsers,
-                                  "activityVotingDict": activityVotingDict,
-                                  "maxVotes": maxVotes,
-                                  "maxVoteActivity": maxVoteActivity});
+                        // send push notification to all users
+                        var query = new Parse.Query(Parse.Installation);
+                        query.containedIn('userId', planUsers);
+
+                        Parse.Push.send({
+                          where: query, // Set our Installation query.
+                          data: {
+                            alert: planName + " has been voted",
+                            planId: planId
+                          }
+                        }, {
+                              success: function() {
+                                // Push was successful
+                                // send response
+                                response.success({"planId": planId,
+                                                  "votingComplete": votingComplete,
+                                                  "votedUserList": votedUserList,
+                                                  "planUserList": planUsers,
+                                                  "activityVotingDict": activityVotingDict,
+                                                  "maxVotes": maxVotes,
+                                                  "maxVoteActivity": maxVoteActivity});
+                              },
+                              error: function(error) {
+                                // Handle error
+                              }
+                        });
                       }
                     });
                   },
@@ -99,12 +126,33 @@ Parse.Cloud.define("plan__update_voting_status", function(request, response) {
                   }
                 });
             } else {
-                response.success({"votingComplete": votingComplete,
-                                  "votedUserList": votedUserList,
-                                  "planUserList": planUsers,
-                                  "activityVotingDict": activityVotingDict,
-                                  "maxVotes": maxVotes,
-                                  "maxVoteActivity": maxVoteActivity});
+
+                var planObject = Parse.Object.extend("Plan");
+                var query = new Parse.Query(planObject);
+                query.get(planId, {
+                  success: function(planObject) {
+                    // The object was retrieved successfully.
+                    planObject.set("activityVotingObject", activityVotingDict);
+                    planObject.save(null, {
+                      success: function(planObject) {
+                        // send push notification to all users
+                        response.success({"planId": planId,
+                                          "votingComplete": votingComplete,
+                                          "votedUserList": votedUserList,
+                                          "planUserList": planUsers,
+                                          "activityVotingDict": activityVotingDict,
+                                          "maxVotes": maxVotes,
+                                          "maxVoteActivity": maxVoteActivity});
+
+                      }
+                    });
+                  },
+                  error: function(object, error) {
+                    // The object was not retrieved successfully.
+                    // error is a Parse.Error with an error code and message.
+                    alert("Error: " + error.code + " " + error.message);
+                  }
+                });
             }
           },
           error: function(error) {
