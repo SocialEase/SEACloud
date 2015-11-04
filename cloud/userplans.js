@@ -3,40 +3,117 @@
 /**
  * @param groupId          {Int}    (required) - group id for which recommendation needs to generated
  */
-Parse.Cloud.define("plan__get_updated_voting_status", function(request, response) {
-    var params = request.params;
-    console.log(params);
-    
-    // var Group = Parse.Object.extend("Group");
-    // var query = new Parse.Query(Group);
-    // query.get(groupId, {
-    //     success: function(group) {
-    //         var usersString = group.get("users")
-    //         var usersPhoneNumbers = usersString.split(",")
-            
-    //         var User = Parse.Object.extend("User");
-    //         var query2 = new Parse.Query(User);
-    //         query2.containedIn("objectId", usersPhoneNumbers);
-    //         query2.find({
-    //             success: function(results) {
-    //                 response.success(results)
-                    
-    //                 alert("Successfully retrieved " + results.length + " users.");
-    //                 // Do something with the returned Parse.Object values
-    //                 for (var i = 0; i < results.length; i++) {
-    //                     var object = results[i];
-    //                         console.log(object.id + ' - ' + object.get('phone'));
-    //                 }
-    //             },
-    //             error: function(error) {
-    //                 console.log("Error: " + error.code + " " + error.message);
-    //                 response.failure("Error retrieving users friends")
-    //             }
-    //         });
+Parse.Cloud.define("plan__update_voting_status", function(request, response) {
+    var planId = request.params["planId"];
 
-    //     },
-    //     error: function(object, error) {
-    //         response.failure("Error retrieving")
-    //     }
-    // });
+    // query UsersPlan data class to get all the users of the plan
+    var userPlans = Parse.Object.extend("UserPlans");
+    var query = new Parse.Query(userPlans);
+    query.equalTo("planId", planId);
+
+    var votingComplete = 0;
+
+    query.find({
+      success: function(results) {
+        // alert("Successfully retrieved " + results.length + " entries.");
+        var planUsers = []
+        for (var i = 0; i < results.length; i++) {
+            var object = results[i];
+            var userId = object.get('userId');
+            planUsers.push(userId);
+        }
+
+        // query UserActivity data class to get all the acitivities and corresponding users
+        var usersActivities = Parse.Object.extend("UserActivity");
+        var query = new Parse.Query(usersActivities);
+        query.equalTo("planId", planId);
+        query.find({
+          success: function(results) {
+            // alert("Successfully retrieved " + results.length + " scores.");
+            // Do something with the returned Parse.Object values
+            var votedUserList = [];
+            var activityVotingDict = {};
+            var maxVotes = null;
+            var maxVoteActivity = null;
+            for (var i = 0; i < results.length; i++) {
+              var object = results[i];
+
+              // get user id
+              var userId = object.get('userId');
+              // get activity id
+              var activityId = object.get('activityId');
+              // get voting count number
+              var vote = object.get('vote');
+
+              if (vote != 0 && votedUserList.indexOf(userId) == -1) {
+                votedUserList.push(userId);
+              }
+
+              if (!(activityId in activityVotingDict)) {
+                activityVotingDict[activityId] = {};
+                activityVotingDict[activityId]["upVotedBy"] = [];
+                activityVotingDict[activityId]["downVotedBy"] = [];
+                activityVotingDict[activityId]["vote"] = vote;
+              } else {
+                activityVotingDict[activityId]["vote"] += vote;
+              }
+
+              if (vote == 1) {
+                activityVotingDict[activityId]["upVotedBy"].push(userId);
+              } else if (vote == -1) {
+                activityVotingDict[activityId]["downVotedBy"].push(userId);
+              }
+
+              // get activity with maximum votes
+              if (maxVotes == null || activityVotingDict[activityId]["vote"] > maxVotes) {
+                maxVotes = activityVotingDict[activityId]["vote"];
+                maxVoteActivity = activityId;
+              }
+            }
+
+            // if all the users have voted then choose the winning acitivity
+            if (planUsers && votedUserList && planUsers.length == votedUserList.length) {
+                // update max voted activity
+                votingComplete = 1;
+                var planObject = Parse.Object.extend("Plan");
+                var query = new Parse.Query(planObject);
+                query.get(planId, {
+                  success: function(planObject) {
+                    // The object was retrieved successfully.
+                    planObject.set("votedActivityObjectId", maxVoteActivity);
+                    planObject.save(null, {
+                      success: function(planObject) {
+                        response.success({"votingComplete": votingComplete,
+                                  "votedUserList": votedUserList,
+                                  "planUserList": planUsers,
+                                  "activityVotingDict": activityVotingDict,
+                                  "maxVotes": maxVotes,
+                                  "maxVoteActivity": maxVoteActivity});
+                      }
+                    });
+                  },
+                  error: function(object, error) {
+                    // The object was not retrieved successfully.
+                    // error is a Parse.Error with an error code and message.
+                    alert("Error: " + error.code + " " + error.message);
+                  }
+                });
+            } else {
+                response.success({"votingComplete": votingComplete,
+                                  "votedUserList": votedUserList,
+                                  "planUserList": planUsers,
+                                  "activityVotingDict": activityVotingDict,
+                                  "maxVotes": maxVotes,
+                                  "maxVoteActivity": maxVoteActivity});
+            }
+          },
+          error: function(error) {
+            alert("Error: " + error.code + " " + error.message);
+          }
+        });
+      },
+      error: function(error) {
+        alert("Error: " + error.code + " " + error.message);
+      }
+    });
 });
