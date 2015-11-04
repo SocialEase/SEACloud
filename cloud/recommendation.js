@@ -12,6 +12,68 @@ Parse.Cloud.define("user_group__get_activity_recommendations", function(request,
 
     console.log(request);
     var resultJson = [];
+    
+    resultJson.push({"addressLine1": "1500 El Camino Real",
+                     "city": "Belmont",
+                     "description": "Burgers",
+                     "location": {
+                         "__type": "GeoPoint",
+                         "latitude": 37.515926,
+                         "longitude": -122.271274
+                     },
+                     "name": "Godfather's Burger Lounge",
+                     "phone": "Phone number (650) 637-9257",
+                     "posterImageUrl": "https://asocialease.parseapp.com/images/stub/Godfather.jpg",
+                     "rating": 4,
+                     "state": "CA",
+                     "zipcode": "94002"});  
+    resultJson.push({"addressLine1": "546 University Ave",
+                     "city": "Palo Alto",
+                     "description": "Vietnamese",
+                     "location": {
+                         "__type": "GeoPoint",
+                         "latitude": 37.448880,
+                         "longitude": -122.158567
+                     },
+                     "name": "Tamarine Restaurant",
+                     "phone": "(650) 325-8500",
+                     "posterImageUrl": "https://asocialease.parseapp.com/images/stub/Tamarine.jpg",
+                     "rating": 4,
+                     "state": "CA",
+                     "zipcode": "94301"});
+    resultJson.push({"addressLine1": "445 Emerson St",
+                     "city": "Palo Alto",
+                     "description": "Burmese, Asian Fusion",
+                     "location": {
+                         "__type": "GeoPoint",
+                         "latitude": 37.445234,
+                         "longitude": -122.163287
+                     },
+                     "name": "Rangoon Ruby",
+                     "phone": "Phone number (650) 323-6543",
+                     "posterImageUrl": "https://asocialease.parseapp.com/images/stub/RangoonRuby.jpg",
+                     "rating": 4,
+                     "state": "CA",
+                     "zipcode": "94301"});
+    resultJson.push({"addressLine1": "129 Lytton Ave",
+                     "city": "Palo Alto",
+                     "description": "Indian, Pakistani",
+                     "image": {
+                         "__type": "File",
+                         "name": "tfss-a07cff17-e56f-465d-a0d0-ae85e60d3d60-Darbar.png",
+                         "url": "http://files.parsetfss.com/36ba3fa4-0edd-4544-8a1f-a772ccd9446f/tfss-a07cff17-e56f-465d-a0d0-ae85e60d3d60-Darbar.png"
+                     },
+                     "location": {
+                         "__type": "GeoPoint",
+                         "latitude": 37.4448476,
+                         "longitude": -122.1651561
+                     },
+                     "name": "Darbar",
+                     "phone": "(650) 321-6688",
+                     "posterImageUrl": "https://asocialease.parseapp.com/images/stub/Darbar.png",
+                     "rating": 4.5,
+                     "state": "CA",
+                     "zipcode": "94301"});
     resultJson.push({"addressLine1": "357 Castro St",
                      "city": "Mountain View",
                      "description": "Indian",
@@ -50,39 +112,6 @@ Parse.Cloud.define("user_group__get_activity_recommendations", function(request,
                      "rating": 4,
                      "state": "CA",
                      "zipcode": "94041"});
-    resultJson.push({"addressLine1": "129 Lytton Ave",
-                     "city": "Palo Alto",
-                     "description": "Indian, Pakistani",
-                     "image": {
-                         "__type": "File",
-                         "name": "tfss-a07cff17-e56f-465d-a0d0-ae85e60d3d60-Darbar.png",
-                         "url": "http://files.parsetfss.com/36ba3fa4-0edd-4544-8a1f-a772ccd9446f/tfss-a07cff17-e56f-465d-a0d0-ae85e60d3d60-Darbar.png"
-                     },
-                     "location": {
-                         "__type": "GeoPoint",
-                         "latitude": 37.4448476,
-                         "longitude": -122.1651561
-                     },
-                     "name": "Darbar",
-                     "phone": "(650) 321-6688",
-                     "posterImageUrl": "https://asocialease.parseapp.com/images/stub/Darbar.png",
-                     "rating": 4.5,
-                     "state": "CA",
-                     "zipcode": "94301"});
-    resultJson.push({"addressLine1": "546 University Ave",
-                     "city": "Palo Alto",
-                     "description": "Vietnamese",
-                     "location": {
-                         "__type": "GeoPoint",
-                         "latitude": 37.448880,
-                         "longitude": -122.158567
-                     },
-                     "name": "Tamarine Restaurant",
-                     "phone": "(650) 325-8500",
-                     "posterImageUrl": "https://asocialease.parseapp.com/images/stub/Tamarine.jpg",
-                     "rating": 4,
-                     "state": "CA",
-                     "zipcode": "94301"});
-
+    
     response.success(resultJson);
 });
