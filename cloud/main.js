@@ -2,6 +2,7 @@ require('cloud/recommendation.js');
 require('cloud/usergroups.js');
 require('cloud/pushnotifications.js');
 require('cloud/useractivities.js');
+require('cloud/userplans.js');
 
 
 // Use Parse.Cloud.define to define as many cloud functions as you want.

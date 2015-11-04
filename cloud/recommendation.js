@@ -26,6 +26,7 @@ Parse.Cloud.define("user_group__get_activity_recommendations", function(request,
                          "longitude": -122.0799188
                      },
                      "name": "Sakoon",
+                     "phone": "(650) 965-2000",
                      "posterImageUrl": "https://asocialease.parseapp.com/images/stub/Sakoon.png",
                      "rating": 3.5,
                      "state": "CA",
@@ -44,6 +45,7 @@ Parse.Cloud.define("user_group__get_activity_recommendations", function(request,
                          "longitude": -122.0820062
                      },
                      "name": "Amber Cafe",
+                     "phone": "(650) 968-1751",
                      "posterImageUrl": "https://asocialease.parseapp.com/images/stub/AmberCafe.png",
                      "rating": 4,
                      "state": "CA",
@@ -62,11 +64,11 @@ Parse.Cloud.define("user_group__get_activity_recommendations", function(request,
                          "longitude": -122.1651561
                      },
                      "name": "Darbar",
+                     "phone": "(650) 321-6688",
                      "posterImageUrl": "https://asocialease.parseapp.com/images/stub/Darbar.png",
                      "rating": 4.5,
                      "state": "CA",
                      "zipcode": "94301"});
-
 
     response.success(resultJson);
 });
