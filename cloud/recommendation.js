@@ -69,6 +69,20 @@ Parse.Cloud.define("user_group__get_activity_recommendations", function(request,
                      "rating": 4.5,
                      "state": "CA",
                      "zipcode": "94301"});
+    resultJson.push({"addressLine1": "546 University Ave",
+                     "city": "Palo Alto",
+                     "description": "Vietnamese",
+                     "location": {
+                         "__type": "GeoPoint",
+                         "latitude": 37.448880,
+                         "longitude": -122.158567
+                     },
+                     "name": "Tamarine Restaurant",
+                     "phone": "(650) 325-8500",
+                     "posterImageUrl": "https://asocialease.parseapp.com/images/stub/Tamarine.jpg",
+                     "rating": 4,
+                     "state": "CA",
+                     "zipcode": "94301"});
 
     response.success(resultJson);
 });
