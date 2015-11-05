@@ -81,9 +81,7 @@ Parse.Cloud.define("plan__update_voting_status", function(request, response) {
                   success: function(planObject) {
                     var planName = planObject.get("name");
                     var planDate = planObject.get("occurrenceDate");
-
-                    alert(planName);
-                    alert(planDate);
+                    var votedPlan = planObject.get("votedActivityObjectId");
 
                     // The object was retrieved successfully.
                     planObject.set("votedActivityObjectId", maxVoteActivity);
@@ -91,31 +89,42 @@ Parse.Cloud.define("plan__update_voting_status", function(request, response) {
                     planObject.save(null, {
                       success: function(planObject) {
                         // send push notification to all users
-                        var query = new Parse.Query(Parse.Installation);
-                        query.containedIn('userId', planUsers);
+                        if (votedPlan == null) {
+                            var query = new Parse.Query(Parse.Installation);
+                            query.containedIn('userId', planUsers);
 
-                        Parse.Push.send({
-                          where: query, // Set our Installation query.
-                          data: {
-                            alert: planName + " has been voted",
-                            planId: planId
-                          }
-                        }, {
-                              success: function() {
-                                // Push was successful
-                                // send response
-                                response.success({"planId": planId,
-                                                  "votingComplete": votingComplete,
-                                                  "votedUserList": votedUserList,
-                                                  "planUserList": planUsers,
-                                                  "activityVotingDict": activityVotingDict,
-                                                  "maxVotes": maxVotes,
-                                                  "maxVoteActivity": maxVoteActivity});
-                              },
-                              error: function(error) {
-                                // Handle error
+                            Parse.Push.send({
+                              where: query, // Set our Installation query.
+                              data: {
+                                alert: planName + " has been voted",
+                                planId: planId
                               }
-                        });
+                            }, {
+                                  success: function() {
+                                    // Push was successful
+                                    // send response
+                                    response.success({"planId": planId,
+                                                      "votingComplete": votingComplete,
+                                                      "votedUserList": votedUserList,
+                                                      "planUserList": planUsers,
+                                                      "activityVotingDict": activityVotingDict,
+                                                      "maxVotes": maxVotes,
+                                                      "maxVoteActivity": maxVoteActivity});
+                                  },
+                                  error: function(error) {
+                                    // Handle error
+                                  }
+                            });
+                        } else {
+                            // send response
+                            response.success({"planId": planId,
+                                              "votingComplete": votingComplete,
+                                              "votedUserList": votedUserList,
+                                              "planUserList": planUsers,
+                                              "activityVotingDict": activityVotingDict,
+                                              "maxVotes": maxVotes,
+                                              "maxVoteActivity": maxVoteActivity});
+                        }
                       }
                     });
                   },
